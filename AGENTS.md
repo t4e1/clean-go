@@ -1,10 +1,7 @@
 # AGENTS.md - Go MSA Project Guidelines
 
 ## MCP
-- Always use next MCP server for better answer:
-    - sequentialthinking
-    - context7
-    - serena
+- Use installed MCP servers for better answer:
 
 ## Build/Test Commands
 - **Build**: `go build ./...`
