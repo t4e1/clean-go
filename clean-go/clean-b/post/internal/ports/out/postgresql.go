@@ -1,4 +1,4 @@
-package rdbms
+package out
 
 import (
 	"github.com/t4e1/clean-go/clean-b/post/internal/core/domain"

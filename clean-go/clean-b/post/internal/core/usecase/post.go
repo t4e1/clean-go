@@ -2,12 +2,12 @@ package usecase
 
 import (
 	"github.com/t4e1/clean-go/clean-b/post/internal/core/domain"
-	out "github.com/t4e1/clean-go/clean-b/post/internal/ports/out/rdbms"
+	"github.com/t4e1/clean-go/clean-b/post/internal/ports/out"
 )
 
 // packages for business logic.
 type RESTApi struct {
-	postgresOut rdbms.PostgresOutPort
+	postgresOut out.PostgresOutPort
 }
 
 func InitRESTUsecase(outAdapter out.PostgresOutPort) *RESTApi {

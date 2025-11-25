@@ -1,17 +1,22 @@
 package main
 
 import (
+	"fmt"
 	"log"
 
-	in "github.com/t4e1/clean-go/clean-b/post/adapter/in/http"
+	"github.com/t4e1/clean-go/clean-b/post/adapter/in"
 	"github.com/t4e1/clean-go/clean-b/post/adapter/out"
-	"github.com/t4e1/clean-go/clean-b/post/configs/setup"
+	"github.com/t4e1/clean-go/clean-b/post/config/setup"
 	"github.com/t4e1/clean-go/clean-b/post/internal/core/usecase"
 	"gorm.io/gorm"
 )
 
 // Cmd package for using server's entry point.
 var db *gorm.DB
+
+const (
+	portNum = 10001
+)
 
 func main() {
 	// Initiate database connection
@@ -28,4 +33,10 @@ func main() {
 
 	// Initiate Inbound Adapter
 	in := in.InitRESTAdapter(uc)
+
+	// Initiate Gin Router
+	r := setup.SetupRouter(in)
+
+	addr := fmt.Sprintf(":%d", portNum)
+	r.Run(addr)
 }
