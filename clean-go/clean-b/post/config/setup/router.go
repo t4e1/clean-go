@@ -10,6 +10,12 @@ func SetupRouter(port *in.RESTInAdapter) *gin.Engine {
 
 	// REST Api routing
 	r.GET("/post/:id", port.GetPost)
+	r.GET("/post", port.GetPosts)
+	r.POST("/post", port.NewPost)
+	// PUT: entire update	- can be set default value if it dosen't have enough value
+	// PATCH: partial update - remain old values except input value
+	r.PATCH("/post/:id", port.UpdatePost)
+	r.DELETE("/post/:id", port.DeletePost)
 
 	return r
 }
