@@ -9,6 +9,9 @@ func SetupRouter(port *in.RESTInAdapter) *gin.Engine {
 	r := gin.Default()
 
 	// REST Api routing
+	// REST method dosen't means real DB activity.
+	// It just help frontend to easily understand  a backend logic
+	// ex) DELETE method can means  "DB row delete || is_deleted=true || deleted_at=NOW()"
 	r.GET("/post/:id", port.GetPost)
 	r.GET("/post", port.GetPosts)
 	r.POST("/post", port.NewPost)
