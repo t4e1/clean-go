@@ -13,3 +13,4 @@ func (f Factory) Query() QueryUsecase     { return QueryUsecase{BaseUC: f.BaseUC
 func (f Factory) Command() CommandUsecase { return CommandUsecase{BaseUC: f.BaseUC} }
 
 /// DI 관련 효율화 공부 좀 더해보기
+// 팩토리 방식 DI 알아보기
