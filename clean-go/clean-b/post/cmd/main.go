@@ -29,7 +29,7 @@ func main() {
 	out := out.InitPostgresAdapter(db)
 
 	// Initiate Usecase
-	uc := usecase.InitRESTUsecase(out)
+	uc := usecase.InitUsecases(out)
 
 	// Initiate Inbound Adapter
 	in := in.InitRESTAdapter(uc)

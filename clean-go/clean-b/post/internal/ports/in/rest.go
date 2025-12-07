@@ -15,12 +15,12 @@ type InboundRESTApiPort interface {
 // higher complexity => divide port into function level
 // ex) PostQueryPort, ApiQueryPort, ....
 type QueryPort interface {
-	GetPost(postId int) (domain.Post, error)
-	GetPosts(query string) ([]domain.Post, error)
+	Get(postId int) (domain.Post, error)
+	GetLists(query string) ([]domain.Post, error)
 }
 
 type CommandPort interface {
-	NewPost(postInfo domain.Post) (bool, error)
-	UpdatePost(postInfo domain.Post) (bool, error)
-	DeletePost(postId int) (bool, error)
+	New(postInfo domain.Post) (bool, error)
+	Update(postInfo domain.Post) (bool, error)
+	Delete(postId int) (bool, error)
 }

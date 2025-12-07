@@ -7,21 +7,19 @@ import (
 
 // packages for query business logic.
 type QueryUsecase struct {
-	Out out.PostgresOutPort
+	out out.PostgresOutPort
 }
 
-func NewQueryUsecase(outAdapter out.PostgresOutPort) QueryUsecase {
-	return QueryUsecase{
-		Out: outAdapter,
-	}
+func NewQuerydUsecase(op out.PostgresOutPort) *QueryUsecase {
+	return &QueryUsecase{out: op}
 }
 
-func (q *QueryUsecase) GetPost(postId int) (domain.Post, error) {
+func (q *QueryUsecase) Get(postId int) (domain.Post, error) {
 
 	return domain.Post{}, nil
 }
 
-func (q *QueryUsecase) GetPosts(query string) ([]domain.Post, error) {
+func (q *QueryUsecase) GetLists(query string) ([]domain.Post, error) {
 
 	return nil, nil
 }

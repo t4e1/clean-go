@@ -8,12 +8,12 @@ import (
 // packages for REST API implementation
 
 type RESTInAdapter struct {
-	inboundPort in.InboundRESTApiPort
+	port in.InboundRESTApiPort
 }
 
-func InitRESTAdapter(inPort in.InboundRESTApiPort) *RESTInAdapter {
+func InitRESTAdapter(ip in.InboundRESTApiPort) *RESTInAdapter {
 	return &RESTInAdapter{
-		inboundPort: inPort,
+		port: ip,
 	}
 }
 
