@@ -5,13 +5,13 @@ import (
 )
 
 type Usecases struct {
-	Query   *QueryUsecase
-	Command *CommandUsecase
+	QueryUsecase
+	CommandUsecase
 }
 
 func InitUsecases(outAdapter out.PostgresOutPort) *Usecases {
 	return &Usecases{
-		Query:   NewQuerydUsecase(outAdapter),
-		Command: NewCommandUsecase(outAdapter),
+		QueryUsecase:   *NewQuerydUsecase(outAdapter),
+		CommandUsecase: *NewCommandUsecase(outAdapter),
 	}
 }

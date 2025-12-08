@@ -1,4 +1,4 @@
-package setup
+package init
 
 // for setup rdbms conenction
 

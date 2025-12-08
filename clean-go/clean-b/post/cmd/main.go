@@ -6,6 +6,7 @@ import (
 
 	"github.com/t4e1/clean-go/clean-b/post/adapter/in"
 	"github.com/t4e1/clean-go/clean-b/post/adapter/out"
+	oinit "github.com/t4e1/clean-go/clean-b/post/adapter/out/init"
 	"github.com/t4e1/clean-go/clean-b/post/config/setup"
 	"github.com/t4e1/clean-go/clean-b/post/internal/core/usecase"
 	"gorm.io/gorm"
@@ -20,7 +21,7 @@ const (
 
 func main() {
 	// Initiate database connection
-	db, err := setup.InitPostgres()
+	db, err := oinit.InitPostgres()
 	if err != nil {
 		log.Fatalf("Failed to initialize postgresql connection: %v", err)
 	}

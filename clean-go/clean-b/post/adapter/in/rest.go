@@ -36,3 +36,7 @@ func (r *RESTInAdapter) UpdatePost(c *gin.Context) {
 func (r *RESTInAdapter) DeletePost(c *gin.Context) {
 	c.JSON(200, "ok")
 }
+
+func (r *RESTInAdapter) Ping(c *gin.Context) {
+	c.JSON(200, "PONG")
+}
