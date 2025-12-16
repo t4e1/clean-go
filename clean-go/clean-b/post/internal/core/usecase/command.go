@@ -15,7 +15,7 @@ func NewCommandUsecase(op out.PostgresOutPort) *CommandUsecase {
 }
 
 func (c *CommandUsecase) New(postInfo domain.Post) (bool, error) {
-
+	
 	return false, nil
 }
 

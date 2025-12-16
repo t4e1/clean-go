@@ -1,7 +1,7 @@
 # Event Handling (Like a Kafka?)
 
 - 실무에서 이벤트 핸들링을 직접 구현하는 모듈에 대한 이야기가 나와서 개인적으로 golang으로 구현해보려함. 
-- 이벤트 핸들링의 대표적인 브로커인 카프카에 대해서 구성요소와 동작 원리에 대해 알아본 뒤, 개인적으로 이벤트 핸들러를 구현해볼 예정.
+- 이벤트 핸들링의 대표적인 브로커인 카프카에 대해서 구성요소와 동작 원리에 대해 알아본 뒤, msa 서비스간 간단한 이벤트를 주고받을 수 있는 이벤트 핸들러를 구현해볼 예정.
 
 
 ## Requirements(Publisher)
@@ -11,7 +11,6 @@
 - 동기/비동기 전송 방식 지원
 - 네트워크 또는 브로커 오류 시 Retry/Backoff 지원
 - 메시지 직렬화 포맷(JSON/Proto/Avro) 지원
-- 필요 시 파티션 전략 선택 가능
 
 ## Requirements(Subscriber(Consumer))
 - 구독 대상 Topic에 새로운 메시지가 존재할 때 이를 Polling 방식으로 가져와 처리
@@ -34,3 +33,30 @@
 
 - (고가용성을 위한 replication, leader election 지원)
 - (스케일아웃 지원(파티션 확장))
+
+## Architecture
+```golang
+# total architecture 
+Publisher -> Broker Server <- Consumer 의 pub/sub 구조 채용
+```
+- publisher -> Broker : gRPC로 이벤트 발행 
+- Consumer -> Broker : gRPC Streaming 으로 구독한 이벤트 등록시 poll
+- Broker는 (메모리/로컬파일/DB저장소)를 기반으로 log 쌓기(server fail 발생시 복구 보장)
+    -> 어디까지 처리하였는지 각 이벤트별 리퀘스트 id 필요할 것
+
+```golang 
+# serveral architecture(pub -> broker)
+// pub: 발행의 주체. 발행만 하면 이후는 신경 안씀. 
+// Event catalog파일을 참조하여 이벤트 관련 정보 정의(이벤트명, 타입(순서중시/속도중시), consumer group id, consumer group order id(순서를 맞추기 위해) 등)
+// 정의한 파일을 읽어와서 이벤트 발행함.
+
+// broker: 이벤트 관리의 주체
+// Event에 대한 상세 정보(Event Catalog)은 신경쓰지 않고 문자(혹은 객체)로만 이벤트 관리
+// server failure 발생시 복구를 위해 logging 필요(메모리?로컬텍스트?DB?)
+// 서버 관련 설정(워커 몇개나 사용할 것인지...등등)은 일단은 코드상 상수로 관리 예정 (향후 서버 config file 생성 가능성 있음)
+
+(pub) event 발생 -> (broker) req-id 생성 & 로깅 시작 -> (br) 이벤트 타입 파악 -> (br) 타입별 큐 배정(FIFO/goroutine) -> (br) polling 확인 시 큐에서 이벤트 삭제 
+```
+
+
+

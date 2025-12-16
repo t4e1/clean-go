@@ -20,5 +20,7 @@ func SetupRouter(port *in.RESTInAdapter) *gin.Engine {
 	r.PATCH("/post/:id", port.UpdatePost)
 	r.DELETE("/post/:id", port.DeletePost)
 
+
+	r.GET("/health", port.GetPost)
 	return r
 }
