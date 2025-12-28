@@ -43,6 +43,7 @@ Publisher -> Broker Server <- Consumer 의 pub/sub 구조 채용
 - Consumer -> Broker : gRPC Streaming 으로 구독한 이벤트 등록시 poll
 - Broker는 (메모리/로컬파일/DB저장소)를 기반으로 log 쌓기(server fail 발생시 복구 보장)
     -> 어디까지 처리하였는지 각 이벤트별 리퀘스트 id 필요할 것
+    -> 폴링 적용시 롱 폴링 생각해볼것.
 
 ```golang 
 # serveral architecture(pub -> broker)
@@ -58,5 +59,31 @@ Publisher -> Broker Server <- Consumer 의 pub/sub 구조 채용
 (pub) event 발생 -> (broker) req-id 생성 & 로깅 시작 -> (br) 이벤트 타입 파악 -> (br) 타입별 큐 배정(FIFO/goroutine) -> (br) polling 확인 시 큐에서 이벤트 삭제 
 ```
 
+```golang
+# serveral architecture(broker <-> sub)
+// sub: 이벤트 수신측
+// Long Polling 기법을 사용해서 broker 측에 일정 시간 단위로 리퀘스트를 보냄.
+// 대기 중인 큐에 작업이 들어오면 해당 작업을 가져가고 ack 반환. 
+// broker 는 ack 을 받으면 큐에서 작업을 삭제
+// 만약 대기 중에 큐에 작업이 들어오지 않는다면 재요청
 
+(sub) polling 요청 보냄 -> (br) 타입별 큐 배정 -> (sub) 작업에 들어온 큐를 확인하고 가져감 -> (sub) 브로커에게 ack 발행 -> (br) 큐에서 이벤트 삭제 
+(sbu) polling 요청 보냄 -> 대기 중 작업 배정 없음 -> (sub) 재요청
+```
+
+## Attributes
+아키텍쳐를 구현하기 위해 입력받아야 하는 값들?
+
+```golang
+"""
+pub/sub 설정 파일 
+
+event-id/ event-type/ consumer-group-ip/ consumer-group-order-id/ 폴링 시간/ 
+
+
+broekr 설정 
+
+worker 수/ 로깅 정책(사용 유무, 로그 유지 시간)/ 
+"""
+```
 
