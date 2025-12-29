@@ -56,7 +56,7 @@ Publisher -> Broker Server <- Consumer 의 pub/sub 구조 채용
 // server failure 발생시 복구를 위해 logging 필요(메모리?로컬텍스트?DB?)
 // 서버 관련 설정(워커 몇개나 사용할 것인지...등등)은 일단은 코드상 상수로 관리 예정 (향후 서버 config file 생성 가능성 있음)
 
-(pub) event 발생 -> (broker) req-id 생성 & 로깅 시작 -> (br) 이벤트 타입 파악 -> (br) 타입별 큐 배정(FIFO/goroutine) -> (br) polling 확인 시 큐에서 이벤트 삭제 
+(pub) event 발생 -> (broker) req-id 생성 & 로깅 시작 -> (br) 이벤트 타입 파악 -> (br) 타입별 큐 배정(FIFO/goroutine) -> (br) polling 확인 시 큐에서 이벤트 삭제 [큐에서 이벤트를 삭제하지 않는 것이 카프카 스타일임. 이벤트 로그 저장소라 생각해야하는것이지, 이벤트 큐 처럼 사용하려하면 문제가 생김]
 ```
 
 ```golang
@@ -64,10 +64,10 @@ Publisher -> Broker Server <- Consumer 의 pub/sub 구조 채용
 // sub: 이벤트 수신측
 // Long Polling 기법을 사용해서 broker 측에 일정 시간 단위로 리퀘스트를 보냄.
 // 대기 중인 큐에 작업이 들어오면 해당 작업을 가져가고 ack 반환. 
-// broker 는 ack 을 받으면 큐에서 작업을 삭제
+// broker 는 ack 을 받으면 커밋 로그 재설정
 // 만약 대기 중에 큐에 작업이 들어오지 않는다면 재요청
 
-(sub) polling 요청 보냄 -> (br) 타입별 큐 배정 -> (sub) 작업에 들어온 큐를 확인하고 가져감 -> (sub) 브로커에게 ack 발행 -> (br) 큐에서 이벤트 삭제 
+(sub) polling 요청 보냄 -> (br) 타입별 큐 배정 -> (sub) 작업에 들어온 이벤트를 확인하고 처리함 -> (sub) 브로커에게 ack 발행 -> (br) 큐에서 이벤트 커밋 로그 변경 
 (sbu) polling 요청 보냄 -> 대기 중 작업 배정 없음 -> (sub) 재요청
 ```
 

@@ -1,4 +1,4 @@
-package eh_client
+package schema
 
 import (
 	"time"
